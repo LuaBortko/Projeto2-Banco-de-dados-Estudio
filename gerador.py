@@ -17,8 +17,15 @@ HOST = os.getenv("host")
 PORT = os.getenv("port")
 DBNAME = os.getenv("dbname")
 
+#Providers do faker
+sexo = DynamicProvider(
+    provider_name = "sexo_provider", elements = ["feminino","masculino"]
+)
+fake.add_provider(sexo)
+
+
 #Funções ligadas ao banco
-def inserção(dicionario, tabela): #função para inserção de dados no banco de dados. Virou função para ter mais reusabilidade sem sujar o código inteiro. TEM QUE ESTAR DEPOIS DA CONEXÃO COM O BANCO. 
+def insercao(dicionario, tabela): #função para inserção de dados no banco de dados. Virou função para ter mais reusabilidade sem sujar o código inteiro. TEM QUE ESTAR DEPOIS DA CONEXÃO COM O BANCO. 
         """
         Inserção dos dados vindos de um dicionário para dentro do banco de dados.
 
@@ -151,6 +158,42 @@ def criarDB():
      cursor.execute("commit")
 
 #Funções para gerar os dados
+def gerarAtores(n):
+    atores = []
+    nomes = []
+    ids = []
+    for i in range(n):
+        aux = 1
+        sexo = fake.sexo_provider()
+        if sexo == "feminino":
+            n1 = fake.first_name_female()
+        else:
+            n1 = fake.first_name_male()
+        n2 = fake.last_name()
+        nome = n1 + " " + n2
+        while aux == 1:
+            if nome in nomes:
+                if sexo == "feminino":
+                    n1 = fake.first_name_female()
+                else:
+                    n1 = fake.first_name_male()
+                n2 = fake.last_name()
+                nome = n1 + " " + n2
+            else:
+                aux = 0
+        aux = 1
+        id = fake.numerify(text='AT%%%')
+        while aux == 1:
+            if id in ids:
+                id = fake.numerify(text='AT%%%')
+            else:
+                aux = 0
+        idade = randint(18,75)
+        ator = {"id": id, "nome": nome, "sexo": sexo, "idade": str(idade)}
+        ids.append(id)
+        nomes.append(nome)
+        atores.append(ator)
+    return atores
 
 # Connect to the database
 try:
@@ -172,6 +215,11 @@ try:
     #main
     resetarDB()
     criarDB()
+
+    n = randint(1,10)
+    atores = gerarAtores(7*n)
+    for ator in atores:
+         insercao(ator,"ator")
 
 
     cursor.close() #sem cursor
