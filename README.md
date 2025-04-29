@@ -5,6 +5,7 @@ Este projeto tem como objetivo a implementação de um sistema de banco de dados
 ## Modelo Relacional
 
 ## Modelo Entidade Relacional
+![image](https://github.com/user-attachments/assets/a7732ebf-bf70-4f13-9662-3037615f9ea5)
 
 ## Execução do Projeto
 
