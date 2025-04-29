@@ -3,6 +3,8 @@
 Este projeto tem como objetivo a implementação de um sistema de banco de dados voltado para a gestão de um estúdio de filmagem. O sistema foi projetado para facilitar a consulta, comparação e o gerenciamento de informações relacionadas às produções feitas nesse estúdio, aos envolvidos na obra e local da gravação. Além da estruturação e implementação do banco, os dados utilizados são gerados de forma aleatória através de um script em Python, simulando um cenário mais realista de uso e facilitando os testes e validações do sistema.
 
 ## Modelo Relacional
+![image](https://github.com/user-attachments/assets/2fc80092-5f67-4439-b7fd-d1380a2160f0)
+
 
 ## Modelo Entidade Relacional
 ![image](https://github.com/user-attachments/assets/a7732ebf-bf70-4f13-9662-3037615f9ea5)
