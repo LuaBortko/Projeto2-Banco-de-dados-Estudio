@@ -206,6 +206,27 @@ def gerarProdutor(n):
     ids = []
     categoria = []
     for i in range(n):
+      id = fake.numerify(text='PR%%%')
+        while aux == 1:
+            if id in ids:
+                id = fake.numerify(text='PR%%%')
+            else:
+                aux = 0
+        idade = randint(25,75)
+
+        produtor = {"id": id, "nome": nome, "sexo": sexo, "idade": str(idade), "categoria": categoria}
+        ids.append(id)
+        nomes.append(nome)
+        produtores.append(produtor)
+    return produtores
+      
+      
+def gerarDiretores(n):
+	diretores=[]
+	nomes=[]
+	sexo=[]
+	ids=[]
+	for i in range(n):
         aux = 1
         sexo = fake.sexo_provider()
         if sexo == "feminino":
@@ -225,19 +246,56 @@ def gerarProdutor(n):
             else:
                 aux = 0
         aux = 1
-        id = fake.numerify(text='PR%%%')
+        id = fake.numerify(text='DR%%%')
         while aux == 1:
             if id in ids:
-                id = fake.numerify(text='PR%%%')
+                id = fake.numerify(text='DR%%%')
             else:
                 aux = 0
-        idade = randint(25,75)
-
-        produtor = {"id": id, "nome": nome, "sexo": sexo, "idade": str(idade), "categoria": categoria}
+        idade = randint(35,75)
+        diretor = {"id": id, "nome": nome, "sexo": sexo, "idade": str(idade)}
         ids.append(id)
         nomes.append(nome)
-        produtores.append(produtor)
-    return produtores
+        diretores.append(diretor)
+    return diretores
+
+def gerarRoteiristas(n):
+	roteiristas=[]
+	nome=[]
+	sexo=[]
+	ids=[]
+	for i in range(n):
+        aux = 1
+        sexo = fake.sexo_provider()
+        if sexo == "feminino":
+            n1 = fake.first_name_female()
+        else:
+            n1 = fake.first_name_male()
+        n2 = fake.last_name()
+        nome = n1 + " " + n2
+        while aux == 1:
+            if nome in nomes:
+                if sexo == "feminino":
+                    n1 = fake.first_name_female()
+                else:
+                    n1 = fake.first_name_male()
+                n2 = fake.last_name()
+                nome = n1 + " " + n2
+            else:
+                aux = 0
+        aux = 1
+        id = fake.numerify(text='RT%%%')
+        while aux == 1:
+            if id in ids:
+                id = fake.numerify(text='RT%%%')
+            else:
+                aux = 0
+        idade = randint(35,75)
+        roteirista = {"id": id, "nome": nome, "sexo": sexo, "idade": str(idade)}
+        ids.append(id)
+        nomes.append(nome)
+        roteiristas.append(roteirista)
+    return roteiristas
 
 # Connect to the database
 try:
@@ -264,6 +322,14 @@ try:
     atores = gerarAtores(7*n)
     for ator in atores:
          insercao(ator,"ator")
+    
+    diretores = gerarDiretores(n)
+    for diretor in diretores:
+ 	 insercao(diretor,"diretor")
+    
+    roteiristas = gerarRoteiristas(n)
+    for roteirista in roteiristas:
+	 insercao(roteirista,"roteirista")
 
 
     cursor.close() #sem cursor
