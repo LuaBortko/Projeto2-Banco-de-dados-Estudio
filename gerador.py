@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 import os
 
 fake = Faker('pt_BR')
+fake2 = Faker('en_US')
 
 # Load environment variables from .env
 load_dotenv()
@@ -21,13 +22,36 @@ DBNAME = os.getenv("dbname")
 sexo = DynamicProvider(
     provider_name = "sexo_provider", elements = ["feminino","masculino"]
 )
-
 categoria = DynamicProvider(
     provider_name = "categoria_provider", elements = ["set","executivo","elenco","objetos"]
 )
+genero = DynamicProvider(
+    provider_name = "genero_provider", elements = [ 
+    "Ação",
+    "Aventura",
+    "Comédia",
+    "Drama",
+    "Fantasia",
+    "Ficção Científica",
+    "Terror",
+    "Suspense",
+    "Mistério",
+    "Animação",
+    "Romance",
+    "Musical",
+    "Documentário",
+    "Biografia",
+    "Guerra",
+    "Policial",
+    "Faroeste",
+    "Histórico",
+    "Esporte",
+    "Crime"
+])
+
 fake.add_provider(sexo)
 fake.add_provider(categoria)
-
+fake.add_provider(genero)
 
 #Funções ligadas ao banco
 def insercao(dicionario, tabela): #função para inserção de dados no banco de dados. Virou função para ter mais reusabilidade sem sujar o código inteiro. TEM QUE ESTAR DEPOIS DA CONEXÃO COM O BANCO. 
@@ -204,24 +228,51 @@ def gerarProdutor(n):
     produtores = []
     nomes = []
     ids = []
-    categoria = []
+    categorias = []
     for i in range(n):
+        aux = 1
         id = fake.numerify(text='PR%%%')
-
         while aux == 1:
             if id in ids:
                 id = fake.numerify(text='PR%%%')
             else:
                 aux = 0
         idade = randint(25,75)
-
+        aux = 1
+        sexo = fake.sexo_provider()
+        if sexo == "feminino":
+            n1 = fake.first_name_female()
+        else:
+            n1 = fake.first_name_male()
+        n2 = fake.last_name()
+        nome = n1 + " " + n2
+        while aux == 1:
+            if nome in nomes:
+                if sexo == "feminino":
+                    n1 = fake.first_name_female()
+                else:
+                    n1 = fake.first_name_male()
+                n2 = fake.last_name()
+                nome = n1 + " " + n2
+            else:
+                aux = 0
+        
+        categoria = fake.categoria_provider()
+        aux = 1
+        while aux == 1:
+            if categoria in categorias:
+                categoria = fake.categoria_provider()
+            else:
+                aux = 0
+        categorias.append(categoria)
+        if len(categorias) == 4:
+            categorias.clear()
         produtor = {"id": id, "nome": nome, "sexo": sexo, "idade": str(idade), "categoria": categoria}
         ids.append(id)
         nomes.append(nome)
         produtores.append(produtor)
     return produtores
-      
-      
+        
 def gerarDiretores(n):
     diretores=[]
     nomes=[]
@@ -298,6 +349,32 @@ def gerarRoteiristas(n):
         roteiristas.append(roteirista)
     return roteiristas
 
+def gerarProducao(id,set,executivo,elenco,objetos):
+    producao = {"id": id, "id_set": set, "id_executivo": executivo, "id_elenco": elenco, "id_objetos": objetos}
+    return producao
+
+def gerarFilme(n):
+    filmes = []
+    ids = []
+    for i in range(n):
+        aux = 1 
+        id = fake.numerify(text='%%%')
+        while aux == 1:
+            if id in ids:
+                id = fake.numerify(text='RT%%%')
+            else:
+                aux = 0
+        genero = fake.genero_provider()
+        ano = randint(1900,2025)
+        n1 = fake2.word()
+        n2 = fake2.word()
+        n1 = n1.capitalize()
+        n2 = n2.capitalize()
+        nome = n1 + " " + n2
+        filme = {"id": id, "genero": genero, "nome": nome, "ano": ano, "id_elenco": None, "id_producao": None, "id_diretor": None, "id_roteirista": None}
+        filmes.append(filme)
+    return filmes
+
 # Connect to the database
 try:
     connection = psycopg2.connect(
@@ -319,7 +396,7 @@ try:
     resetarDB()
     criarDB()
 
-    n = randint(1,10)
+    n = randint(5,10)
     atores = gerarAtores(7*n)
     for ator in atores:
          insercao(ator,"ator")
@@ -331,6 +408,47 @@ try:
     roteiristas = gerarRoteiristas(n)
     for roteirista in roteiristas:
         insercao(roteirista,"roteirista")
+    
+    produtores = gerarProdutor(4*n)
+    for produtor in produtores:
+        insercao(produtor,"produtor")
+
+    psets = []
+    pexecutivos = []
+    pelencos = []
+    pobjetos = []
+    for i in range(len(produtores)):
+        if produtores[i]["categoria"] == "set":
+            psets.append(produtores[i]["id"])
+        elif produtores[i]["categoria"] == "executivo":
+            pexecutivos.append(produtores[i]["id"])
+        elif produtores[i]["categoria"] == "elenco":
+            pelencos.append(produtores[i]["id"])
+        elif produtores[i]["categoria"] == "objetos":
+            pobjetos.append(produtores[i]["id"])
+
+    producoes = []
+    laux = []
+    for i in range(n):
+        r = randint(0,len(psets) - 1)  
+        aux = 1
+        id = fake.numerify(text='P-%%%')
+        while aux == 1:
+            if id in laux:
+                id = fake.numerify(text='P-%%%')
+            else:
+                aux = 0
+        laux.append(id)
+        producao = gerarProducao(id,psets[r],pexecutivos[r],pelencos[r],pobjetos[r])
+        producoes.append(producao)
+    laux.clear()
+
+    for producao in producoes:
+        insercao(producao,"producao")
+
+    filmes = gerarFilme(n)
+    print(filmes)
+    
 
     cursor.close() #sem cursor
     connection.close() #fim da conexão com o banco de dados 
