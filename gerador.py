@@ -21,7 +21,12 @@ DBNAME = os.getenv("dbname")
 sexo = DynamicProvider(
     provider_name = "sexo_provider", elements = ["feminino","masculino"]
 )
+
+categoria = DynamicProvider(
+    provider_name = "categoria_provider", elements = ["set","executivo","elenco","objetos"]
+)
 fake.add_provider(sexo)
+fake.add_provider(categoria)
 
 
 #Funções ligadas ao banco
@@ -194,6 +199,45 @@ def gerarAtores(n):
         nomes.append(nome)
         atores.append(ator)
     return atores
+
+def gerarProdutor(n):
+    produtores = []
+    nomes = []
+    ids = []
+    categoria = []
+    for i in range(n):
+        aux = 1
+        sexo = fake.sexo_provider()
+        if sexo == "feminino":
+            n1 = fake.first_name_female()
+        else:
+            n1 = fake.first_name_male()
+        n2 = fake.last_name()
+        nome = n1 + " " + n2
+        while aux == 1:
+            if nome in nomes:
+                if sexo == "feminino":
+                    n1 = fake.first_name_female()
+                else:
+                    n1 = fake.first_name_male()
+                n2 = fake.last_name()
+                nome = n1 + " " + n2
+            else:
+                aux = 0
+        aux = 1
+        id = fake.numerify(text='PR%%%')
+        while aux == 1:
+            if id in ids:
+                id = fake.numerify(text='PR%%%')
+            else:
+                aux = 0
+        idade = randint(25,75)
+
+        produtor = {"id": id, "nome": nome, "sexo": sexo, "idade": str(idade), "categoria": categoria}
+        ids.append(id)
+        nomes.append(nome)
+        produtores.append(produtor)
+    return produtores
 
 # Connect to the database
 try:
