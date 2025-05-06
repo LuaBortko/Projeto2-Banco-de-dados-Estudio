@@ -21,7 +21,12 @@ DBNAME = os.getenv("dbname")
 sexo = DynamicProvider(
     provider_name = "sexo_provider", elements = ["feminino","masculino"]
 )
+
+categoria = DynamicProvider(
+    provider_name = "categoria_provider", elements = ["set","executivo","elenco","objetos"]
+)
 fake.add_provider(sexo)
+fake.add_provider(categoria)
 
 
 #Funções ligadas ao banco
@@ -195,6 +200,27 @@ def gerarAtores(n):
         atores.append(ator)
     return atores
 
+def gerarProdutor(n):
+    produtores = []
+    nomes = []
+    ids = []
+    categoria = []
+    for i in range(n):
+      id = fake.numerify(text='PR%%%')
+        while aux == 1:
+            if id in ids:
+                id = fake.numerify(text='PR%%%')
+            else:
+                aux = 0
+        idade = randint(25,75)
+
+        produtor = {"id": id, "nome": nome, "sexo": sexo, "idade": str(idade), "categoria": categoria}
+        ids.append(id)
+        nomes.append(nome)
+        produtores.append(produtor)
+    return produtores
+      
+      
 def gerarDiretores(n):
 	diretores=[]
 	nomes=[]
@@ -270,7 +296,6 @@ def gerarRoteiristas(n):
         nomes.append(nome)
         roteiristas.append(roteirista)
     return roteiristas
-
 
 # Connect to the database
 try:
