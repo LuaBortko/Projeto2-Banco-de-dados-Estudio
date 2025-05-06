@@ -206,7 +206,8 @@ def gerarProdutor(n):
     ids = []
     categoria = []
     for i in range(n):
-      id = fake.numerify(text='PR%%%')
+        id = fake.numerify(text='PR%%%')
+
         while aux == 1:
             if id in ids:
                 id = fake.numerify(text='PR%%%')
@@ -222,11 +223,11 @@ def gerarProdutor(n):
       
       
 def gerarDiretores(n):
-	diretores=[]
-	nomes=[]
-	sexo=[]
-	ids=[]
-	for i in range(n):
+    diretores=[]
+    nomes=[]
+    sexo=[]
+    ids=[]
+    for i in range(n):
         aux = 1
         sexo = fake.sexo_provider()
         if sexo == "feminino":
@@ -260,11 +261,11 @@ def gerarDiretores(n):
     return diretores
 
 def gerarRoteiristas(n):
-	roteiristas=[]
-	nome=[]
-	sexo=[]
-	ids=[]
-	for i in range(n):
+    roteiristas=[]
+    nomes=[]
+    sexo=[]
+    ids=[]
+    for i in range(n):
         aux = 1
         sexo = fake.sexo_provider()
         if sexo == "feminino":
@@ -325,12 +326,11 @@ try:
     
     diretores = gerarDiretores(n)
     for diretor in diretores:
- 	 insercao(diretor,"diretor")
+        insercao(diretor,"diretor")
     
     roteiristas = gerarRoteiristas(n)
     for roteirista in roteiristas:
-	 insercao(roteirista,"roteirista")
-
+        insercao(roteirista,"roteirista")
 
     cursor.close() #sem cursor
     connection.close() #fim da conexão com o banco de dados 
