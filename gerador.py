@@ -365,7 +365,7 @@ def gerarFilme(n):
             else:
                 aux = 0
         genero = fake.genero_provider()
-        ano = randint(1900,2025)
+        ano = randint(2000,2025)
         n1 = fake2.word()
         n2 = fake2.word()
         n1 = n1.capitalize()
@@ -396,16 +396,16 @@ try:
     resetarDB()
     criarDB()
 
-    n = randint(5,10)
+    n = randint(8,20)
     atores = gerarAtores(7*n)
     for ator in atores:
          insercao(ator,"ator")
     
-    diretores = gerarDiretores(n)
+    diretores = gerarDiretores(n - 6)
     for diretor in diretores:
         insercao(diretor,"diretor")
     
-    roteiristas = gerarRoteiristas(n)
+    roteiristas = gerarRoteiristas(n - 4)
     for roteirista in roteiristas:
         insercao(roteirista,"roteirista")
     
@@ -446,8 +446,39 @@ try:
     for producao in producoes:
         insercao(producao,"producao")
 
+    lr = []
+    ld = []
     filmes = gerarFilme(n)
-    print(filmes)
+    for i in range(len(filmes)):
+        filmes[i]["id_producao"] = producoes[i]["id"]
+        
+        r = randint(0, len(roteiristas)-1)
+        rot = roteiristas[r]["id"]
+        if len(lr) != len(roteiristas):
+            aux = 1
+            while aux == 1:
+                if rot in lr:
+                    r = randint(0, len(roteiristas)-1)
+                    rot = roteiristas[r]["id"]
+                else: 
+                    aux = 0
+            lr.append(rot)
+        filmes[i]["id_roteirista"] = rot
+
+        r = randint(0, len(diretores)-1)
+        dir = diretores[r]["id"]
+        if len(ld) != len(diretores):
+            aux = 1
+            while aux == 1:
+                if dir in ld:
+                    r = randint(0, len(diretores)-1)
+                    dir = diretores[r]["id"]
+                else: 
+                    aux = 0
+            ld.append(dir)
+        filmes[i]["id_diretor"] = dir
+
+    
     
 
     cursor.close() #sem cursor
