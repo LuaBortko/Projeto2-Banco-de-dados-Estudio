@@ -153,23 +153,19 @@ def criarDB():
             ,genero varchar(30)
             ,nome varchar(30)
             ,ano_lancamento varchar(4)
-            ,id_elenco varchar(10)
             ,id_producao varchar(10)
             ,id_diretor varchar(10)
             ,id_roteirista varchar(10)
             --,id_sequencia varchar(10)
             ,primary key (id)
-            --,foreign key (id_elenco) references elenco(id)
-            ,foreign key (id_producao) references produtor(id)
+            ,foreign key (id_producao) references producao(id)
             ,foreign key (id_diretor) references diretor(id)
             ,foreign key (id_roteirista) references roteirista(id)
         );
 
         create table elenco(
-            id varchar(10)
-            ,id_filme varchar(10)
+            id_filme varchar(10)
             ,id_ator varchar(10)
-            ,primary key (id)
             ,foreign key (id_filme) references filme(id)
             ,foreign key (id_ator) references ator(id)
         );
@@ -181,8 +177,7 @@ def criarDB():
             ,id_filme varchar(10)
             ,foreign key (id_filme) references filme(id)
         );
-
-        ALTER TABLE filme ADD CONSTRAINT id FOREIGN KEY (id_elenco) REFERENCES elenco(id);
+                    
     """)
      cursor.execute("commit")
 
@@ -353,6 +348,10 @@ def gerarProducao(id,set,executivo,elenco,objetos):
     producao = {"id": id, "id_set": set, "id_executivo": executivo, "id_elenco": elenco, "id_objetos": objetos}
     return producao
 
+def gerarElenco(filme,ator):
+    elenco = {"id_filme": filme, "id_ator": ator}
+    return elenco
+###### não faz sentido o elenco ter id.
 def gerarFilme(n):
     filmes = []
     ids = []
@@ -371,7 +370,7 @@ def gerarFilme(n):
         n1 = n1.capitalize()
         n2 = n2.capitalize()
         nome = n1 + " " + n2
-        filme = {"id": id, "genero": genero, "nome": nome, "ano": ano, "id_elenco": None, "id_producao": None, "id_diretor": None, "id_roteirista": None}
+        filme = {"id": id, "genero": genero, "nome": nome, "ano_lancamento": str(ano), "id_producao": None, "id_diretor": None, "id_roteirista": None}
         filmes.append(filme)
     return filmes
 
@@ -451,7 +450,6 @@ try:
     filmes = gerarFilme(n)
     for i in range(len(filmes)):
         filmes[i]["id_producao"] = producoes[i]["id"]
-        
         r = randint(0, len(roteiristas)-1)
         rot = roteiristas[r]["id"]
         if len(lr) != len(roteiristas):
@@ -478,8 +476,27 @@ try:
             ld.append(dir)
         filmes[i]["id_diretor"] = dir
 
+    for filme in filmes:
+        insercao(filme,"filme")
+
+    """
+    -> elenco e filme
     
+    tccs_aluno = []
+    for i in range(len(tccs)):
+        id_t = tccs[i]["id"]
+        for j in range(randint(1,3)):
+            r = randint(0,len(alunTcc)-1)
+            aluno = alunTcc[r]
+            tccs_aluno.append(gerarTCC_aluno(id_t,aluno))
+            del alunTcc[r]
+    if len(alunTcc) != 0:
+        for i in range(len(alunTcc)):
+            r = randint(0,len(tccs)-1)
+            tccs_aluno.append(gerarTCC_aluno(tccs[r]["id"],alunTcc[i]))
+    """
     
+
 
     cursor.close() #sem cursor
     connection.close() #fim da conexão com o banco de dados 
