@@ -153,6 +153,7 @@ def criarDB():
             ,genero varchar(30)
             ,nome varchar(30)
             ,ano_lancamento varchar(4)
+            ,tempo varchar(3)
             ,id_producao varchar(10)
             ,id_diretor varchar(10)
             ,id_roteirista varchar(10)
@@ -168,14 +169,6 @@ def criarDB():
             ,id_ator varchar(10)
             ,foreign key (id_filme) references filme(id)
             ,foreign key (id_ator) references ator(id)
-        );
-
-        create table gravacao(
-            data varchar(10)
-            ,local varchar(10)
-            ,horario varchar(10)
-            ,id_filme varchar(10)
-            ,foreign key (id_filme) references filme(id)
         );
                     
     """)
@@ -371,7 +364,8 @@ def gerarFilme(n):
         n1 = n1.capitalize()
         n2 = n2.capitalize()
         nome = n1 + " " + n2
-        filme = {"id": id, "genero": genero, "nome": nome, "ano_lancamento": str(ano), "id_producao": None, "id_diretor": None, "id_roteirista": None}
+        tempo = randint(40,240)
+        filme = {"id": id, "genero": genero, "nome": nome, "ano_lancamento": str(ano), "tempo": str(tempo), "id_producao": None, "id_diretor": None, "id_roteirista": None}
         filmes.append(filme)
     return filmes
 
