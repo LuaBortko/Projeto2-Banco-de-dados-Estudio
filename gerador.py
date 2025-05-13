@@ -351,7 +351,7 @@ def gerarProducao(id,set,executivo,elenco,objetos):
 def gerarElenco(filme,ator):
     elenco = {"id_filme": filme, "id_ator": ator}
     return elenco
-###### não faz sentido o elenco ter id.
+
 def gerarFilme(n):
     filmes = []
     ids = []
@@ -360,9 +360,10 @@ def gerarFilme(n):
         id = fake.numerify(text='%%%')
         while aux == 1:
             if id in ids:
-                id = fake.numerify(text='RT%%%')
+                id = fake.numerify(text='%%%')
             else:
                 aux = 0
+        ids.append(id)
         genero = fake.genero_provider()
         ano = randint(2000,2025)
         n1 = fake2.word()
@@ -395,8 +396,8 @@ try:
     resetarDB()
     criarDB()
 
-    n = randint(8,20)
-    atores = gerarAtores(7*n)
+    n = randint(20,30)
+    atores = gerarAtores(6*n)
     for ator in atores:
          insercao(ator,"ator")
     
@@ -479,25 +480,41 @@ try:
     for filme in filmes:
         insercao(filme,"filme")
 
-    """
-    -> elenco e filme
-    
-    tccs_aluno = []
-    for i in range(len(tccs)):
-        id_t = tccs[i]["id"]
-        for j in range(randint(1,3)):
-            r = randint(0,len(alunTcc)-1)
-            aluno = alunTcc[r]
-            tccs_aluno.append(gerarTCC_aluno(id_t,aluno))
-            del alunTcc[r]
-    if len(alunTcc) != 0:
-        for i in range(len(alunTcc)):
-            r = randint(0,len(tccs)-1)
-            tccs_aluno.append(gerarTCC_aluno(tccs[r]["id"],alunTcc[i]))
-    """
-    
+    laux.clear()
+    elencos = []
+    for i  in range(len(filmes)):
+        filme = filmes[i]["id"]
+        laux2 = []
+        for j in range(randint(4,8)):
+            r = randint(0,len(atores)-1)
+            ator = atores[r]["id"]
+            if len(laux) < len(atores):
+                aux = 0
+                while aux == 0:
+                    if ator in laux:
+                        r = randint(0,len(atores)-1)
+                        ator = atores[r]["id"]
+                    elif ator in laux2:
+                        r = randint(0,len(atores)-1)
+                        ator = atores[r]["id"]
+                    else:
+                        aux = 1
+            aux = 0
+            while aux == 0:
+                if ator in laux2:
+                    r = randint(0,len(atores)-1)
+                    ator = atores[r]["id"]
+                else:
+                    aux = 1
+            laux.append(ator)
+            elenco = gerarElenco(filme,ator)
+            elencos.append(elenco)
+    for elenco in elencos:
+        insercao(elenco, "elenco")
 
 
+    
+    
     cursor.close() #sem cursor
     connection.close() #fim da conexão com o banco de dados 
     print("Connection closed.")
