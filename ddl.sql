@@ -1,4 +1,4 @@
-create table ator(
+        create table ator(
             id varchar(10)
             ,nome varchar(30)
             ,sexo varchar(10)
@@ -66,4 +66,4 @@ create table ator(
             ,foreign key (id_filme) references filme(id)
             ,foreign key (id_ator) references ator(id)
         );
-                   
+                 
