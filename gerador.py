@@ -153,36 +153,24 @@ def criarDB():
             ,genero varchar(30)
             ,nome varchar(30)
             ,ano_lancamento varchar(4)
-            ,id_elenco varchar(10)
+            ,tempo varchar(3)
             ,id_producao varchar(10)
             ,id_diretor varchar(10)
             ,id_roteirista varchar(10)
             --,id_sequencia varchar(10)
             ,primary key (id)
-            --,foreign key (id_elenco) references elenco(id)
-            ,foreign key (id_producao) references produtor(id)
+            ,foreign key (id_producao) references producao(id)
             ,foreign key (id_diretor) references diretor(id)
             ,foreign key (id_roteirista) references roteirista(id)
         );
 
         create table elenco(
-            id varchar(10)
-            ,id_filme varchar(10)
+            id_filme varchar(10)
             ,id_ator varchar(10)
-            ,primary key (id)
             ,foreign key (id_filme) references filme(id)
             ,foreign key (id_ator) references ator(id)
         );
-
-        create table gravacao(
-            data varchar(10)
-            ,local varchar(10)
-            ,horario varchar(10)
-            ,id_filme varchar(10)
-            ,foreign key (id_filme) references filme(id)
-        );
-
-        ALTER TABLE filme ADD CONSTRAINT id FOREIGN KEY (id_elenco) REFERENCES elenco(id);
+                    
     """)
      cursor.execute("commit")
 
@@ -353,6 +341,10 @@ def gerarProducao(id,set,executivo,elenco,objetos):
     producao = {"id": id, "id_set": set, "id_executivo": executivo, "id_elenco": elenco, "id_objetos": objetos}
     return producao
 
+def gerarElenco(filme,ator):
+    elenco = {"id_filme": filme, "id_ator": ator}
+    return elenco
+
 def gerarFilme(n):
     filmes = []
     ids = []
@@ -361,17 +353,19 @@ def gerarFilme(n):
         id = fake.numerify(text='%%%')
         while aux == 1:
             if id in ids:
-                id = fake.numerify(text='RT%%%')
+                id = fake.numerify(text='%%%')
             else:
                 aux = 0
+        ids.append(id)
         genero = fake.genero_provider()
-        ano = randint(1900,2025)
+        ano = randint(2000,2025)
         n1 = fake2.word()
         n2 = fake2.word()
         n1 = n1.capitalize()
         n2 = n2.capitalize()
         nome = n1 + " " + n2
-        filme = {"id": id, "genero": genero, "nome": nome, "ano": ano, "id_elenco": None, "id_producao": None, "id_diretor": None, "id_roteirista": None}
+        tempo = randint(40,240)
+        filme = {"id": id, "genero": genero, "nome": nome, "ano_lancamento": str(ano), "tempo": str(tempo), "id_producao": None, "id_diretor": None, "id_roteirista": None}
         filmes.append(filme)
     return filmes
 
@@ -396,16 +390,16 @@ try:
     resetarDB()
     criarDB()
 
-    n = randint(5,10)
-    atores = gerarAtores(7*n)
+    n = randint(20,30)
+    atores = gerarAtores(6*n)
     for ator in atores:
          insercao(ator,"ator")
     
-    diretores = gerarDiretores(n)
+    diretores = gerarDiretores(n - 6)
     for diretor in diretores:
         insercao(diretor,"diretor")
     
-    roteiristas = gerarRoteiristas(n)
+    roteiristas = gerarRoteiristas(n - 4)
     for roteirista in roteiristas:
         insercao(roteirista,"roteirista")
     
@@ -446,10 +440,75 @@ try:
     for producao in producoes:
         insercao(producao,"producao")
 
+    lr = []
+    ld = []
     filmes = gerarFilme(n)
-    print(filmes)
-    
+    for i in range(len(filmes)):
+        filmes[i]["id_producao"] = producoes[i]["id"]
+        r = randint(0, len(roteiristas)-1)
+        rot = roteiristas[r]["id"]
+        if len(lr) != len(roteiristas):
+            aux = 1
+            while aux == 1:
+                if rot in lr:
+                    r = randint(0, len(roteiristas)-1)
+                    rot = roteiristas[r]["id"]
+                else: 
+                    aux = 0
+            lr.append(rot)
+        filmes[i]["id_roteirista"] = rot
 
+        r = randint(0, len(diretores)-1)
+        dir = diretores[r]["id"]
+        if len(ld) != len(diretores):
+            aux = 1
+            while aux == 1:
+                if dir in ld:
+                    r = randint(0, len(diretores)-1)
+                    dir = diretores[r]["id"]
+                else: 
+                    aux = 0
+            ld.append(dir)
+        filmes[i]["id_diretor"] = dir
+
+    for filme in filmes:
+        insercao(filme,"filme")
+
+    laux.clear()
+    elencos = []
+    for i  in range(len(filmes)):
+        filme = filmes[i]["id"]
+        laux2 = []
+        for j in range(randint(4,8)):
+            r = randint(0,len(atores)-1)
+            ator = atores[r]["id"]
+            if len(laux) < len(atores):
+                aux = 0
+                while aux == 0:
+                    if ator in laux:
+                        r = randint(0,len(atores)-1)
+                        ator = atores[r]["id"]
+                    elif ator in laux2:
+                        r = randint(0,len(atores)-1)
+                        ator = atores[r]["id"]
+                    else:
+                        aux = 1
+            aux = 0
+            while aux == 0:
+                if ator in laux2:
+                    r = randint(0,len(atores)-1)
+                    ator = atores[r]["id"]
+                else:
+                    aux = 1
+            laux.append(ator)
+            elenco = gerarElenco(filme,ator)
+            elencos.append(elenco)
+    for elenco in elencos:
+        insercao(elenco, "elenco")
+
+
+    
+    
     cursor.close() #sem cursor
     connection.close() #fim da conexão com o banco de dados 
     print("Connection closed.")
