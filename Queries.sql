@@ -14,6 +14,9 @@ SELECT f.nome AS filme
 FROM filme f
 WHERE cast(f.tempo as int) >= 200
 --Contar a quantidade de filmes por gênero.
+SELECT genero, count(genero) AS qtde
+FROM filme
+GROUP BY genero
 --Mostrar os roteiristas que escreveram mais de um filme.
 SELECT r.id AS id_roteirista, r.nome AS nome, count(f.id_roteirista) AS qtde_filmes
 FROM roteirista r 
