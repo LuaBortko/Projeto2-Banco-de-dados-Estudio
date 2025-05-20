@@ -4,6 +4,11 @@ FROM filme
 --Mostrar todos os atores que participaram de um determinado filme.
 --Contar quantos filmes cada ator participou.
 --Listar todos os filmes dirigidos por um diretor específico.
+SELECT f.nome AS filme, d.nome
+FROM filme f
+INNER JOIN diretor d
+  ON f.id_diretor = d.id
+WHERE f.id_diretor = 'DR216'
 --Mostrar os filmes com duração superior a determinado tempo.
 SELECT f.nome AS filme
 FROM filme f
