@@ -31,7 +31,7 @@ INNER JOIN filme f
   ON f.id_roteirista = r.id
 GROUP BY r.id
 HAVING count(id_roteirista) > 1
---Apresentar a quantidade de filmes lançados por ano.
+
 --Listar os atores do sexo feminino com menos de 30 anos.
 SELECT nome, sexo, idade
 FROM ator
