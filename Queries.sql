@@ -16,6 +16,9 @@ GROUP BY r.id
 HAVING count(id_roteirista) > 1
 --Apresentar a quantidade de filmes lançados por ano.
 --Listar os atores do sexo feminino com menos de 30 anos.
+SELECT nome, sexo, idade
+FROM ator
+WHERE sexo = 'feminino' AND cast(idade as int) < 30 
 --Listar todos os filmes de um determinado gênero lançados em um intervalo de anos.
 SELECT f.nome AS filme
 FROM filme f
