@@ -4,8 +4,6 @@
 --Listar todos os filmes dirigidos por um diretor específico.
 --Mostrar os filmes com duração superior a determinado tempo.
 --Contar a quantidade de filmes por gênero.
---Listar os filmes junto com os nomes de seus roteiristas.
---Listar os filmes com mais de 3 atores no elenco.
 --Mostrar os roteiristas que escreveram mais de um filme.
 --Apresentar a quantidade de filmes lançados por ano.
 --Listar os atores do sexo feminino com menos de 30 anos.
