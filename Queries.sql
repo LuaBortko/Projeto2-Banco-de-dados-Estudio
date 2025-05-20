@@ -1,4 +1,6 @@
 --Listar todos os filmes com nome, gênero e ano de lançamento.
+SELECT nome, genero, ano_lancamento
+FROM filme
 --Mostrar todos os atores que participaram de um determinado filme.
 --Contar quantos filmes cada ator participou.
 --Listar todos os filmes dirigidos por um diretor específico.
