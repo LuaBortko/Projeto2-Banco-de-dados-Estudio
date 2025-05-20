@@ -12,6 +12,12 @@ INNER JOIN filme f
 WHERE e.id_filme = '174'
   
 --Contar quantos filmes cada ator participou.
+SELECT a.nome, COUNT(e.id_filme) AS "Num"
+FROM ator AS a
+INNER JOIN elenco AS e ON e.id_ator = a.id
+GROUP BY a.id, a.nome
+ORDER BY "Num" DESC;
+
 --Listar todos os filmes dirigidos por um diretor específico.
 SELECT f.nome AS filme, d.nome
 FROM filme f
