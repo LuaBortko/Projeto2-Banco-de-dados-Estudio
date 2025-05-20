@@ -3,6 +3,9 @@
 --Contar quantos filmes cada ator participou.
 --Listar todos os filmes dirigidos por um diretor específico.
 --Mostrar os filmes com duração superior a determinado tempo.
+SELECT f.nome AS filme
+FROM filme f
+WHERE cast(f.tempo as int) >= 200
 --Contar a quantidade de filmes por gênero.
 --Mostrar os roteiristas que escreveram mais de um filme.
 SELECT r.id AS id_roteirista, r.nome AS nome, count(f.id_roteirista) AS qtde_filmes
