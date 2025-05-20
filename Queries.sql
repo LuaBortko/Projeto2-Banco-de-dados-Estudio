@@ -5,6 +5,12 @@
 --Mostrar os filmes com duração superior a determinado tempo.
 --Contar a quantidade de filmes por gênero.
 --Mostrar os roteiristas que escreveram mais de um filme.
+SELECT r.id AS id_roteirista, r.nome AS nome, count(f.id_roteirista) AS qtde_filmes
+FROM roteirista r 
+INNER JOIN filme f
+  ON f.id_roteirista = r.id
+GROUP BY r.id
+HAVING count(id_roteirista) > 1
 --Apresentar a quantidade de filmes lançados por ano.
 --Listar os atores do sexo feminino com menos de 30 anos.
 --Listar todos os filmes de um determinado gênero lançados em um intervalo de anos.
