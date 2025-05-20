@@ -55,6 +55,7 @@ INNER JOIN elenco e
   ON f.id = e.id_filme
 GROUP BY f.id
 HAVING count(id_ator) > 5
+  
 --Listar todos os filmes de um determinado gênero lançados em um intervalo de anos.
 SELECT f.nome AS filme
 FROM filme f
