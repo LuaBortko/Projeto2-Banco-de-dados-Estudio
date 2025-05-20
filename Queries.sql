@@ -2,6 +2,13 @@
 SELECT nome, genero, ano_lancamento
 FROM filme
 --Mostrar todos os atores que participaram de um determinado filme.
+SELECT a.nome as ator, f.nome
+FROM ator a
+INNER JOIN elenco e
+  ON a.id = e.id_ator
+INNER JOIN filme f
+  ON e.id_filme = f.id
+WHERE e.id_filme = '174'
 --Contar quantos filmes cada ator participou.
 --Listar todos os filmes dirigidos por um diretor específico.
 SELECT f.nome AS filme, d.nome
